@@ -1,0 +1,92 @@
+<%- include('../partials/header'); %>
+  <%- include('../partials/login'); %>
+    <%- include('../partials/signup'); %>
+	<%- include('../partials/nav'); %>
+
+<div class="page-single">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<br><br><br><br><br><br>
+				<div class="topbar-filter fw">
+					<p>Found <span><%= total %> movies</span> in total</p>
+					<label>Sort by:</label>
+					<select>
+						<option value="popularity">Popularity Descending</option>
+						<option value="popularity">Popularity Ascending</option>
+						<option value="rating">Rating Descending</option>
+						<option value="rating">Rating Ascending</option>
+						<option value="date">Release date Descending</option>
+						<option value="date">Release date Ascending</option>
+					</select>
+				</div>
+				<div class="flex-wrap-movielist mv-grid-fw">
+					<% data.forEach(movie => { %>
+						<div class="movie-item-style-2 movie-item-style-1">
+							<% if (movie && movie.poster_file_path) { %>
+								<img src="<%= movie.poster_file_path.replace(/\\/g, '/') %>" alt="">
+							  <% } else { %>
+								<img src="https://i.pinimg.com/736x/5c/9c/76/5c9c76be44205e8a5b381bd81f16a776.jpg" alt="Poster Not Available">
+							  <% } %>
+						  <div class="hvr-inner">
+							<a href="/movies/<%= movie.id %>"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+						  </div>
+						  <div class="mv-item-infor">
+							<h6><a href="#"><%= movie.title %></a></h6>
+							<p class="rate"><i class="ion-android-star"></i><span><%= movie.rating %></span> /10</p>
+						  </div>
+						</div>
+						<% }) %>
+				</div>		
+				<div class="topbar-filter">
+					<label>Movies per page:</label>
+					<select>
+						<option value="range">20 Movies</option>
+						<option value="saab">10 Movies</option>
+					</select>
+					
+					<div class="pagination2">
+						<% const MAX_PAGES_DISPLAY = 5; // Adjust the number of pages to display around the current page %>
+						<% const startPage = Math.max(currentPage - Math.floor(MAX_PAGES_DISPLAY / 2), 1); %>
+						<% const endPage = Math.min(startPage + MAX_PAGES_DISPLAY - 1, totalPages); %>
+						
+						<% const basePageUrl = query ? '/search' : '/movies'; %>
+						
+						<% if (currentPage > 1) { %>
+						  <a href="<%= `${basePageUrl}?page=1${query ? `&query=${query}` : ''}` %>"><i class="ion-arrow-left-b"></i></a>
+						<% } %>
+						
+						<% if (startPage > 1) { %>
+						  <a href="<%= `${basePageUrl}?page=1${query ? `&query=${query}` : ''}` %>">1</a>
+						  <% if (startPage > 2) { %>
+							<span>...</span>
+						  <% } %>
+						<% } %>
+						
+						<% for (let i = startPage; i <= endPage; i++) { %>
+						  <% if (i === currentPage) { %>
+							<a class="active" href="#"><%= i %></a>
+						  <% } else { %>
+							<a href="<%= `${basePageUrl}?page=${i}${query ? `&query=${query}` : ''}` %>"><%= i %></a>
+						  <% } %>
+						<% } %>
+						
+						<% if (endPage < totalPages) { %>
+						  <% if (endPage < totalPages - 1) { %>
+							<span>...</span>
+						  <% } %>
+						  <a href="<%= `${basePageUrl}?page=${totalPages}${query ? `&query=${query}` : ''}` %>"><%= totalPages %></a>
+						<% } %>
+						
+						<% if (currentPage < totalPages) { %>
+						  <a href="<%= `${basePageUrl}?page=${totalPages}${query ? `&query=${query}` : ''}` %>"><i class="ion-arrow-right-b"></i></a>
+						<% } %>
+					  </div>
+					  
+					 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<%- include('../partials/footer'); %>
